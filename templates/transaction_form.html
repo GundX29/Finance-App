@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+{% block title %}{{ "Sửa" if item else "Thêm" }} giao dịch{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>{{ "Sửa giao dịch" if item else "Thêm giao dịch" }}</h2>
+
+    <form method="post">
+        <label>Loại giao dịch</label>
+        <select name="type" required>
+            <option value="income"
+                {% if item and item.type == "income" %}selected{% endif %}>
+                Khoản thu
+            </option>
+            <option value="expense"
+                {% if item and item.type == "expense" %}selected{% endif %}>
+                Khoản chi
+            </option>
+        </select>
+
+        <label>Số tiền (VND)</label>
+        <input type="number" name="amount" min="0.01" step="0.01"
+               required value="{{ item.amount if item else '' }}">
+
+        <label>Ngày giao dịch</label>
+        <input type="date" name="date" required max="{{ today }}"
+               value="{{ item.date.isoformat() if item else today }}">
+
+        <label>Danh mục</label>
+        <input name="category" maxlength="100" required
+               placeholder="Ví dụ: Ăn uống, Lương"
+               value="{{ item.category if item else '' }}">
+
+        <label>Ghi chú</label>
+        <textarea name="note" maxlength="500">{{ item.note if item else '' }}</textarea>
+
+        <button type="submit">Lưu giao dịch</button>
+        <a href="{{ url_for('transactions') }}">Quay lại</a>
+    </form>
+</div>
+{% endblock %}

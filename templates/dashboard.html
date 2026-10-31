@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block title %}Tổng quan{% endblock %}
+{% block content %}
+<h2>Tổng quan tháng {{ "%02d"|format(today_month) if today_month is defined else "" }}</h2>
+
+<div class="stats">
+    <div class="card">
+        <h3>Tổng thu</h3>
+        <p>{{ "{:,.0f}".format(income) }} VND</p>
+    </div>
+    <div class="card">
+        <h3>Tổng chi</h3>
+        <p>{{ "{:,.0f}".format(expense) }} VND</p>
+    </div>
+    <div class="card">
+        <h3>Số dư</h3>
+        <p>{{ "{:,.0f}".format(balance) }} VND</p>
+    </div>
+</div>
+
+<h3>Giao dịch gần đây</h3>
+<a href="{{ url_for('add_transaction') }}">+ Thêm giao dịch</a>
+
+<table>
+    <tr>
+        <th>Ngày</th>
+        <th>Danh mục</th>
+        <th>Loại</th>
+        <th>Số tiền</th>
+    </tr>
+    {% for item in recent %}
+    <tr>
+        <td>{{ item.date.strftime("%d/%m/%Y") }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ "Thu" if item.type == "income" else "Chi" }}</td>
+        <td>{{ "{:,.0f}".format(item.amount) }} VND</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Chưa có giao dịch trong tháng này.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+{% block title %}Giao dịch{% endblock %}
+{% block content %}
+<h2>Danh sách giao dịch</h2>
+
+<p><a href="{{ url_for('add_transaction') }}">+ Thêm giao dịch mới</a></p>
+
+<table>
+    <tr>
+        <th>Ngày</th>
+        <th>Danh mục</th>
+        <th>Loại</th>
+        <th>Số tiền</th>
+        <th>Ghi chú</th>
+        <th>Thao tác</th>
+    </tr>
+
+    {% for item in transactions %}
+    <tr>
+        <td>{{ item.date.strftime("%d/%m/%Y") }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ "Thu" if item.type == "income" else "Chi" }}</td>
+        <td>{{ "{:,.0f}".format(item.amount) }} VND</td>
+        <td>{{ item.note or "-" }}</td>
+        <td>
+            <a href="{{ url_for('edit_transaction', transaction_id=item.id) }}">
+                Sửa
+            </a>
+            <form class="inline" method="post"
+                  action="{{ url_for('delete_transaction', transaction_id=item.id) }}"
+                  onsubmit="return confirm('Bạn có chắc muốn xóa giao dịch này?')">
+                <button type="submit">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6">Chưa có giao dịch nào.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

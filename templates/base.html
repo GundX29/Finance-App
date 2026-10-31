@@ -1,0 +1,69 @@
+
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Quản lý thu chi{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 16px;
+            background: #f5f7fb;
+            color: #202938;
+        }
+        nav, .card, form {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+        nav a { margin-right: 14px; text-decoration: none; }
+        input, select, textarea, button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin: 8px 0 14px;
+        }
+        button { cursor: pointer; }
+        .success { color: #16803c; }
+        .error { color: #c62828; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        .inline { display: inline; }
+        .inline button { width: auto; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Tổng quan</a>
+        <a href="{{ url_for('transactions') }}">Giao dịch</a>
+        {% if current_user.is_authenticated %}
+            <span>Xin chào, {{ current_user.username }}</span>
+            <form class="inline" method="post"
+                  action="{{ url_for('logout') }}">
+                <button type="submit">Đăng xuất</button>
+            </form>
+        {% else %}
+            <a href="{{ url_for('login') }}">Đăng nhập</a>
+            <a href="{{ url_for('register') }}">Đăng ký</a>
+        {% endif %}
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</body>
+</html>
